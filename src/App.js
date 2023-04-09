@@ -7,12 +7,14 @@ import NotFound from './components/NotFound'
 import './App.css'
 
 const App = () => (
-  <Switch>
+  <>
     <Header />
-    <Route exact path="/" component={Home} />
-    <Route exact path="/login" component={LoginForm} />
-    <Route component={NotFound} />
-  </Switch>
+    <Switch>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/login" component={LoginForm} />
+      <Route component={NotFound} />
+    </Switch>
+  </>
 )
 
 export default App
