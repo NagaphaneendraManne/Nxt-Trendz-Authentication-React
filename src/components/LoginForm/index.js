@@ -1,5 +1,6 @@
 // Write your JS code here
 import {Component} from 'react'
+
 import './index.css'
 
 class LoginForm extends Component {
@@ -13,7 +14,7 @@ class LoginForm extends Component {
     this.setState({password: event.target.value})
   }
 
-  onSuccessLogin = () => {
+  onSubmitSuccess = () => {
     const {history} = this.props
     history.replace('/')
   }
@@ -22,7 +23,7 @@ class LoginForm extends Component {
     this.setState({showSubmitError: true, errorMsg})
   }
 
-  onSubmitLogin = async event => {
+  submitForm = async event => {
     event.preventDefault()
     const {username, password} = this.state
     const userDetails = {username, password}
@@ -31,64 +32,79 @@ class LoginForm extends Component {
       method: 'POST',
       body: JSON.stringify(userDetails),
     }
-
     const response = await fetch(url, options)
     const data = await response.json()
     console.log(data)
-    console.log(response)
-    if (response.status === 200) {
-      this.onSuccessLogin()
+    if (response.ok === true) {
+      this.onSubmitSuccess()
     } else {
       this.onErrorLogin(data.error_msg)
     }
   }
 
-  render() {
-    const {username, password, showSubmitError, errorMsg} = this.state
+  renderPasswordField = () => {
+    const {password} = this.state
     return (
-      <div className="login-main-container">
-        <div className="image-form-container">
+      <>
+        <label className="input-label" htmlFor="password">
+          PASSWORD
+        </label>
+        <input
+          type="password"
+          id="password"
+          className="password-input-filed"
+          value={password}
+          onChange={this.onChangePassword}
+        />
+      </>
+    )
+  }
+
+  renderUsernameField = () => {
+    const {username} = this.state
+    return (
+      <>
+        <label className="input-label" htmlFor="username">
+          USERNAME
+        </label>
+        <input
+          type="text"
+          id="username"
+          className="username-input-filed"
+          value={username}
+          onChange={this.onChangeUsername}
+        />
+      </>
+    )
+  }
+
+  render() {
+    const {showSubmitError, errorMsg} = this.state
+    return (
+      <div className="login-form-container">
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
+          className="login-website-logo-mobile-image"
+          alt="website logo"
+        />
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-login-img.png"
+          className="login-image"
+          alt="website login"
+        />
+        <form className="form-container" onSubmit={this.submitForm}>
           <img
-            src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-login-img.png"
-            alt="website login"
-            className="website-login-image"
+            src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
+            className="login-website-logo-desktop-image"
+            alt="website logo"
           />
-          <form className="div-form-container" onSubmit={this.onSubmitLogin}>
-            <img
-              src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
-              alt="website logo"
-              className="form-nxt"
-            />
-            <div className="form-container">
-              <label htmlFor="username" className="label">
-                USERNAME
-              </label>
-              <input
-                type="text"
-                id="username"
-                className="input"
-                placeholder="Username"
-                value={username}
-                onChange={this.onChangeUsername}
-              />
-              <label htmlFor="password" className="label">
-                PASSWORD
-              </label>
-              <input
-                type="password"
-                id="password"
-                className="input"
-                placeholder="Password"
-                value={password}
-                onChange={this.onChangePassword}
-              />
-              <button type="submit" className="lo-btn">
-                Login
-              </button>
-              {showSubmitError && <p className="error-msg">*{errorMsg}</p>}
-            </div>
-          </form>
-        </div>
+          <div className="input-container">{this.renderUsernameField()}</div>
+          <div className="input-container">{this.renderPasswordField()}</div>
+          <button type="submit" className="login-button">
+            Login
+          </button>
+          {showSubmitError && <p className="error-msg">*{errorMsg}</p>}
+        </form>
       </div>
     )
   }
